@@ -35,3 +35,5 @@ pytest
 httpx
 openai
 email-validator
+python-jose
+mongomock
