@@ -49,10 +49,10 @@ async def get_category(category_id: str):
 #     return updated_category
 
 
-# @router.get("/", response_model=List[CategoryResponse])
-# async def get_all_categories():
-#     """
-#     Get all categories.
-#     """
-#     categories = await category_db.get_all_categories()
-#     return categories
+@router.get("/", response_model=List[CategoryResponse])
+async def get_all_categories():
+    """
+    Get all categories.
+    """
+    categories = await category_db.get_all_categories()
+    return categories
