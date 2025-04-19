@@ -3,11 +3,6 @@ from app.routers import user, category, rating, match, result, ranking, auth, gr
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
 
-# CORS設定
-origins = [
-    "http://localhost:5173",  # Viteなどのデフォルトポート
-    "https://yourfrontend.example.com",  # 本番環境用（必要に応じて追加）
-]
 
 # FastAPIインスタンス（タイトルや説明込みで1つだけ作成）
 app = FastAPI(
@@ -17,6 +12,9 @@ app = FastAPI(
 )
 
 # CORSミドルウェアを追加
+
+# CORS設定
+origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
