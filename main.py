@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import user, category, rating, match, result, ranking
+from app.routers import user, category, rating, match, result, ranking, auth
 
 app = FastAPI(
     title="IceBreaker API",
@@ -8,6 +8,7 @@ app = FastAPI(
 )
 
 # Include all routers
+app.include_router(auth.router)
 app.include_router(user.router)
 app.include_router(category.router)
 app.include_router(rating.router)

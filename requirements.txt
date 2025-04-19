@@ -34,3 +34,6 @@ uvicorn==0.34.0
 pytest
 httpx
 openai
+email-validator
+python-jose
+mongomock
