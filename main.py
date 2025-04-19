@@ -1,13 +1,30 @@
 from fastapi import FastAPI
 from app.routers import user, category, rating, match, result, ranking, auth
+from fastapi.middleware.cors import CORSMiddleware
 
+# CORS設定
+origins = [
+    "http://localhost:5173",  # Viteなどのデフォルトポート
+    "https://yourfrontend.example.com",  # 本番環境用（必要に応じて追加）
+]
+
+# FastAPIインスタンス（タイトルや説明込みで1つだけ作成）
 app = FastAPI(
     title="IceBreaker API",
     description="API for IceBreaker application",
     version="1.0.0"
 )
 
-# Include all routers
+# CORSミドルウェアを追加
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 各ルーターを登録
 app.include_router(auth.router)
 app.include_router(user.router)
 app.include_router(category.router)
@@ -16,6 +33,7 @@ app.include_router(match.router)
 app.include_router(result.router)
 app.include_router(ranking.router)
 
+# ルートエンドポイント
 @app.get("/")
 def read_root():
     return {"message": "Welcome to IceBreaker API!"}
