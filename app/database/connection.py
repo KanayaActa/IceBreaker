@@ -3,6 +3,7 @@ from pymongo.database import Database
 from pymongo.collection import Collection
 import os
 from dotenv import load_dotenv
+import asyncio
 
 # Load environment variables
 load_dotenv()
@@ -13,6 +14,7 @@ DB_NAME = os.getenv("DB_NAME", "icebreaker_db")
 
 # Database client
 client = AsyncIOMotorClient(MONGO_API_KEY)
+client.get_io_loop = asyncio.get_event_loop
 database = client[DB_NAME]
 
 # Collections

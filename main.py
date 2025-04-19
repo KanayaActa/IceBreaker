@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.routers import user, category, rating, match, result, ranking, auth, graph
 from fastapi.middleware.cors import CORSMiddleware
+import asyncio
 
 # CORS設定
 origins = [
