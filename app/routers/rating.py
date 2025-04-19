@@ -8,13 +8,13 @@ from bson.errors import InvalidId
 router = APIRouter(prefix="/api/rating", tags=["ratings"])
 
 
-@router.post("/", response_model=RatingResponse)
-async def create_rating(rating: RatingCreate):
-    """
-    Create a new rating.
-    """
-    created_rating = await rating_db.create_rating(rating)
-    return created_rating
+# @router.post("/", response_model=RatingResponse)
+# async def create_rating(rating: RatingCreate):
+#     """
+#     Create a new rating.
+#     """
+#     created_rating = await rating_db.create_rating(rating)
+#     return created_rating
 
 
 @router.get("/{rating_id}", response_model=RatingResponse)
@@ -50,17 +50,17 @@ async def get_user_category_rating(user_id: str, category_id: str):
     return rating
 
 
-@router.put("/{rating_id}", response_model=RatingResponse)
-async def update_rating(rating_id: str, rating_update: RatingUpdate):
-    """
-    Update rating details.
-    """
-    try:
-        ObjectId(rating_id)  # Validate ObjectId format
-    except InvalidId:
-        raise HTTPException(status_code=400, detail="Invalid rating ID format")
+# @router.put("/{rating_id}", response_model=RatingResponse)
+# async def update_rating(rating_id: str, rating_update: RatingUpdate):
+#     """
+#     Update rating details.
+#     """
+#     try:
+#         ObjectId(rating_id)  # Validate ObjectId format
+#     except InvalidId:
+#         raise HTTPException(status_code=400, detail="Invalid rating ID format")
     
-    updated_rating = await rating_db.update_rating(rating_id, rating_update)
-    if not updated_rating:
-        raise HTTPException(status_code=404, detail="Rating not found")
-    return updated_rating
+#     updated_rating = await rating_db.update_rating(rating_id, rating_update)
+#     if not updated_rating:
+#         raise HTTPException(status_code=404, detail="Rating not found")
+#     return updated_rating

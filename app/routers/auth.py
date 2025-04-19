@@ -68,10 +68,32 @@ async def signup(user_data: SignUpRequest):
     )
 
 
-@router.post("/signin", response_model=Token)
+# @router.post("/signin", response_model=Token)
+# async def signin(form_data: SignInRequest):
+#     """
+#     Authenticate a user and return a JWT token.
+#     """
+#     user = await user_db.authenticate_user(form_data.email, form_data.password)
+    
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect email or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+        
+#     # Create access token
+#     access_token_expires = timedelta(minutes=user_db.ACCESS_TOKEN_EXPIRE_MINUTES)
+#     access_token = user_db.create_access_token(
+#         data={"sub": user.id},
+#         expires_delta=access_token_expires
+#     )
+    
+#     return {"access_token": access_token, "token_type": "bearer"}
+@router.post("/signin", response_model=UserResponse)
 async def signin(form_data: SignInRequest):
     """
-    Authenticate a user and return a JWT token.
+    Authenticate a user and return the user object.
     """
     user = await user_db.authenticate_user(form_data.email, form_data.password)
     
@@ -81,12 +103,7 @@ async def signin(form_data: SignInRequest):
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-        
-    # Create access token
-    access_token_expires = timedelta(minutes=user_db.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = user_db.create_access_token(
-        data={"sub": user.id},
-        expires_delta=access_token_expires
-    )
     
-    return {"access_token": access_token, "token_type": "bearer"}
+    return user
+
+
