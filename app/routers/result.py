@@ -7,6 +7,7 @@ from app.schemas.match import MatchCreate
 from app.utils.rating_calculator import calculate_elo_rating_change, get_initial_rating
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
+from app.schemas.rating import RatingInDB
 
 router = APIRouter(prefix="/api/result", tags=["results"])
 
@@ -23,7 +24,7 @@ class MatchResultCreate(BaseModel):
 @router.post("/", status_code=201)
 async def record_match_result(result: MatchResultCreate):
     """
-    Record a match result and update ratings.
+    Record a match result and create new ratings.
     """
     # Validate IDs
     try:
@@ -58,7 +59,7 @@ async def record_match_result(result: MatchResultCreate):
     
     match = await match_db.create_match(match_data)
     
-    # Get current ratings or create initial ratings if they don't exist
+    # Get current ratings or use initial rating if they don't exist
     winner_rating = await rating_db.get_user_category_rating(result.winner_id, result.category_id)
     loser_rating = await rating_db.get_user_category_rating(result.loser_id, result.category_id)
     
@@ -68,43 +69,31 @@ async def record_match_result(result: MatchResultCreate):
     # Calculate new ratings
     new_winner_rate, new_loser_rate = calculate_elo_rating_change(winner_current_rate, loser_current_rate)
     
-    # Update or create ratings
-    if winner_rating:
-        from app.schemas.rating import RatingUpdate
-        await rating_db.update_rating(
-            str(winner_rating.id), 
-            RatingUpdate(rate=new_winner_rate, date=result.date)
-        )
-    else:
-        from app.schemas.rating import RatingCreate
-        await rating_db.create_rating(
-            RatingCreate(
-                user_id=result.winner_id,
-                category_id=result.category_id,
-                rate=new_winner_rate,
-                date=result.date
-            )
-        )
+    # Create new ratings for both players
+    from app.schemas.rating import RatingCreate
     
-    if loser_rating:
-        from app.schemas.rating import RatingUpdate
-        await rating_db.update_rating(
-            str(loser_rating.id), 
-            RatingUpdate(rate=new_loser_rate, date=result.date)
+    # Create new rating for winner
+    winner_new_rating = await rating_db.create_rating(
+        RatingCreate(
+            user_id=result.winner_id,
+            category_id=result.category_id,
+            rate=new_winner_rate,
+            date=result.date
         )
-    else:
-        from app.schemas.rating import RatingCreate
-        await rating_db.create_rating(
-            RatingCreate(
-                user_id=result.loser_id,
-                category_id=result.category_id,
-                rate=new_loser_rate,
-                date=result.date
-            )
+    )
+    
+    # Create new rating for loser
+    loser_new_rating = await rating_db.create_rating(
+        RatingCreate(
+            user_id=result.loser_id,
+            category_id=result.category_id,
+            rate=new_loser_rate,
+            date=result.date
         )
+    )
     
     return {
-        "message": "Match result recorded and ratings updated",
+        "message": "Match result recorded and new ratings created",
         "match_id": match.id,
         "winner": {
             "id": result.winner_id,
@@ -117,3 +106,4 @@ async def record_match_result(result: MatchResultCreate):
             "new_rating": new_loser_rate
         }
     }
+

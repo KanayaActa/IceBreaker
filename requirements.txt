@@ -37,3 +37,4 @@ openai
 email-validator
 python-jose
 mongomock
+matplotlib

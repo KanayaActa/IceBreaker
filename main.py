@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import user, category, rating, match, result, ranking, auth
+from app.routers import user, category, rating, match, result, ranking, auth, graph
 from fastapi.middleware.cors import CORSMiddleware
 
 # CORS設定
@@ -32,6 +32,7 @@ app.include_router(rating.router)
 app.include_router(match.router)
 app.include_router(result.router)
 app.include_router(ranking.router)
+app.include_router(graph.router)
 
 # ルートエンドポイント
 @app.get("/")

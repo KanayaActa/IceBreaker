@@ -17,20 +17,20 @@ router = APIRouter(prefix="/api/category", tags=["categories"])
 #     return created_category
 
 
-@router.get("/{category_id}", response_model=CategoryResponse)
-async def get_category(category_id: str):
-    """
-    Get category details by ID.
-    """
-    try:
-        ObjectId(category_id)  # Validate ObjectId format
-    except InvalidId:
-        raise HTTPException(status_code=400, detail="Invalid category ID format")
+# @router.get("/{category_id}", response_model=CategoryResponse)
+# async def get_category(category_id: str):
+#     """
+#     Get category details by ID.
+#     """
+#     try:
+#         ObjectId(category_id)  # Validate ObjectId format
+#     except InvalidId:
+#         raise HTTPException(status_code=400, detail="Invalid category ID format")
     
-    category = await category_db.get_category(category_id)
-    if not category:
-        raise HTTPException(status_code=404, detail="Category not found")
-    return category
+#     category = await category_db.get_category(category_id)
+#     if not category:
+#         raise HTTPException(status_code=404, detail="Category not found")
+#     return category
 
 
 # @router.put("/{category_id}", response_model=CategoryResponse)
