@@ -11,7 +11,7 @@ router = APIRouter(prefix="/api/ranking", tags=["rankings"])
 @router.get("/category/{category_id}")
 async def get_category_ranking(category_id: str):
     """
-    Get ranking for a specific category.
+    Get ranking for a specific category, limited to a maximum of 10 results.
     """
     try:
         ObjectId(category_id)  # Validate ObjectId format
@@ -26,6 +26,9 @@ async def get_category_ranking(category_id: str):
     rank = 1
     
     for rating in ratings:
+        if len(ranking) >= 10:  # Limit to 10 results
+            break
+        
         user = await user_db.get_user(rating.user_id)
         if user:
             ranking.append({
